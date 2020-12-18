@@ -1,12 +1,16 @@
 <template>
   <div>
-    <router-view></router-view>
+    视频
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  data () {
+    return {
+      active: 0
+    }
+  }
 }
 </script>
 
