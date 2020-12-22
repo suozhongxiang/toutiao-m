@@ -66,8 +66,10 @@ export default {
       })
       try { // 通过try catch 来获取请求之后的结果
         const { data: res } = await login(this.user) // 接受axios对象返回的值可then，可以await进行解构赋值判断，也可以进行try/catch
+        console.log(res.data)
         this.$store.commit('setUser', res.data) // 调用vuex方法将token数据保存vuex容器中
         this.$toast.success('登录成功')
+        this.$router.back() // 返回登录前的页面，现在back不合适
       } catch (err) {
         if (err.response.status === 400) {
           this.$toast.fail('验证码错误')

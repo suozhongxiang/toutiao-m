@@ -6,7 +6,8 @@
       <van-tabbar-item to="/home"><i slot="icon" class="iconfont iconshouye"></i><span class="text">首页</span></van-tabbar-item>
       <van-tabbar-item to="/wen"><i slot="icon" class="iconfont iconwenda"></i>问答</van-tabbar-item>
       <van-tabbar-item to="/video"><i slot="icon" class="iconfont iconshipin"></i>视频</van-tabbar-item>
-      <van-tabbar-item to="/my"><i slot="icon" class="iconfont iconwode"></i>我的</van-tabbar-item>
+      <van-tabbar-item to="/my"><i slot="icon" class="iconfont iconwode"></i>{{$store.state.user ? '我的' : '未登录'}}</van-tabbar-item>
+      <!-- 三目运算符确定显示文字 -->
     </van-tabbar>
   </div>
 </template>

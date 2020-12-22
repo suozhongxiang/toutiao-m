@@ -1,5 +1,5 @@
-export const getItem = (key, value) => {
-  const data = localStorage.getItem(key, value)
+export const getItem = key => {
+  const data = localStorage.getItem(key)
   try {
     return JSON.parse(data) // 解析失败就会抛出异常
   } catch (error) {

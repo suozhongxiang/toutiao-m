@@ -10,11 +10,12 @@ export default new Vuex.Store({
   mutations: {
     setUser (state, data) { // 保存最新的token
       state.user = data
-      setItem(data) // tonken和vuex相结合
+      setItem(tokenkey, data) // tonken和vuex相结合
     }
   },
   actions: {
   },
   modules: {
-  }
+  },
+  getters: {}
 })
