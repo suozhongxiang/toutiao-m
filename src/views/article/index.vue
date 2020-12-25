@@ -57,6 +57,8 @@
         <van-button class="retry-btn" @click="getArticle">点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
+      <!-- 文章评论 list有改变会同步到子组件-->
+     <commentList :arteId="articleId" @onloadSuccess="articleCommentNum = $event.total_count" :list="successList" @replyShow="onreplyShow"/>
     </div>
       <!-- 底部区域 -->
       <div class="avt-buttom">
@@ -65,14 +67,26 @@
         type="default"
         round
         size="small"
+        @click="show = true"
       >写评论</van-button>
       <!-- <van-icon class="iconfont icondianzan" /> -->
       <like-article :arteId="articles.art_id" v-model="articles.attitude"/>
-      <van-icon class="iconfont iconpinglun grd" badge="28" />
+      <van-icon class="iconfont iconpinglun grd" :badge="articleCommentNum" />
       <!-- 文章收藏组件 -->
       <collect-article :arteId="articles.art_id" v-model="articles.is_collected"/>
       <van-icon class="iconfont iconfenxiang grd" />
       </div>
+      <!-- 评论弹出层 -->
+    <van-popup v-model="show" position="bottom" :style="{ height: '30%' }" >
+      <commentPost :Id="articleId" @postSuccess="onPostSuccess($event)"/>
+    </van-popup>
+      <!-- 回复用户弹出层 -->
+    <van-popup v-model="isshow" position="bottom" :style="{ height: '95%' }" >
+      <!-- v-if 解决组件关闭后组件内部的数据还在,导致loding函数不调用
+      v-if创建和销毁组件
+       -->
+      <comm-replay  v-if="isshow" :currentComment="currentComment" :artID="articles.art_id" @colseCurrent=" isshow = false "/>
+    </van-popup>
   </div>
 </template>
 
@@ -82,13 +96,26 @@ import { ImagePreview } from 'vant'
 import followUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import likeArticle from '@/components/like-article'
+import commentList from './comment-list'
+import commentPost from './comment-post'
+import commReplay from './comment-replay'
 export default {
   name: 'articlee',
   data () {
     return {
       articles: [], // 文章数据
       isLoding: true,
-      errStatus: 0 // 保存的是错误代码，在错误后如果为404，则会添加进来，上面的标签会拿此进行渲染
+      errStatus: 0, // 保存的是错误代码，在错误后如果为404，则会添加进来，上面的标签会拿此进行渲染
+      articleCommentNum: 0, // 保存文章评论总数
+      show: false, // 控制评论弹出层
+      successList: [], // 向评论组件传递的数组，为了在发布评论后，可以将最新的发布的数据添加新数组中，不用刷新页面或者重新调取接口
+      isshow: false, // 回复用户弹出层
+      currentComment: null // 用来保存被评论回复的用户对象，由孙子组件点击回复按钮触发传值，然后Index组件又传值给评论回复组件
+    }
+  },
+  provide: function () { // 像子组件发送依赖注入的数据
+    return {
+      articlesId: this.articleId
     }
   },
   props: {
@@ -135,6 +162,15 @@ export default {
           })
         }
       })
+    },
+    onPostSuccess (data) { // 由子组件控制，发布成功后将后端返回的最新的数据返回Index组件，接收后再出插入数组
+      this.successList.unshift(data.new_obj) // 将最新数添加到数组前面，然后这个数组通过自定义属性有发向渲染评论列表的子组件
+      this.show = false
+      this.articleCommentNum += 1
+    },
+    onreplyShow (data) { // 评论子组件中回复评论，触发index组件的函数
+      this.isshow = true
+      this.currentComment = data // 将点击的回复对象传值给变量，变量又传值给评论回复组件
     }
   },
   created () {
@@ -143,7 +179,10 @@ export default {
   components: {
     followUser, // 注册自己写的关注组件
     CollectArticle,
-    likeArticle
+    likeArticle,
+    commentList,
+    commentPost,
+    commReplay
   }
 }
 </script>

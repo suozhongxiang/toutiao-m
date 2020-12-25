@@ -22,7 +22,7 @@
           />
           <span>{{ userInfo ? userInfo.name : '黑马'}}</span>
         </div>
-        <div class="right"><van-button type="default" size="mini" round>编辑资料</van-button></div>
+        <div class="right"><van-button type="default" size="mini" round to="profile">编辑资料</van-button></div>
       </div>
       <div class="base_down">
         <div class="base_down_item">

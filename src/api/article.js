@@ -79,3 +79,10 @@ export const UnlikeArticle = id => { // 取消点赞文章
     url: `/v1_0/article/likings/${id}`
   })
 }
+export const getComments = params => { // 获取评论
+  return request({
+    method: 'GET',
+    url: '/v1_0/comments',
+    params
+  })
+}

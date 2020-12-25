@@ -14,6 +14,7 @@
       >搜索</van-button>
     </van-nav-bar>
     <!-- tab -->
+    <keep-alive>
     <van-tabs v-model="active" animated swipeable class="tab">
       <!-- 遍历得到的频道数据，将其展示 -->
       <!-- 频道列表 -->
@@ -31,6 +32,7 @@
         <i class="iconfont icongengduo"></i>
     </div>
     </van-tabs>
+    </keep-alive>
     <!-- 汉堡弹出层 -->
     <van-popup
       v-model="isChannelEdiatShow"
